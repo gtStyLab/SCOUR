@@ -66,34 +66,31 @@ subplot(2,2,plotcount)
 y = 100*[nanmean(accuracy_1contMet) nanmean(sensitivity_1contMet) nanmean(specificity_1contMet) nanmean(ppv_1contMet);...
     nanmean(accuracy_2contMet) nanmean(sensitivity_2contMet) nanmean(specificity_2contMet) nanmean(ppv_2contMet);...
     nanmean(accuracy_3contMet) nanmean(sensitivity_3contMet) nanmean(specificity_3contMet) nanmean(ppv_3contMet)];
-bar(y);
+bar(y');
 
-row1 = {'1-controller' '2-controller' '3-controller'};
-row2 = {'interaction' 'interaction' 'interaction'};
-labelArray = [row1; row2]; 
-tickLabels = strtrim(sprintf('%s\\newline%s\n', labelArray{:}));
+row = {'Accuracy' 'Sensitivity' 'Specificity' 'PPV'}; 
 ax = gca(); 
-ax.XTick = 1:3; 
-ax.XLim = [0,4];
-ax.XTickLabel = tickLabels; 
+ax.XTick = 1:4; 
+ax.XLim = [0,5];
+ax.XTickLabel = row; 
 hold on
 
 % Error bars
 err = 100*[nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet))) nanstd(sensitivity_1contMet)/sqrt(sum(~isnan(sensitivity_1contMet))) nanstd(specificity_1contMet)/sqrt(sum(~isnan(specificity_1contMet))) nanstd(ppv_1contMet)/sqrt(sum(~isnan(ppv_1contMet)));...
     nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet))) nanstd(sensitivity_2contMet)/sqrt(sum(~isnan(sensitivity_2contMet))) nanstd(specificity_2contMet)/sqrt(sum(~isnan(specificity_2contMet))) nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));...
     nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet))) nanstd(sensitivity_3contMet)/sqrt(sum(~isnan(sensitivity_3contMet))) nanstd(specificity_3contMet)/sqrt(sum(~isnan(specificity_3contMet))) nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)))];
-ngroups = 3;
-nbars = 4;
+ngroups = 4;
+nbars = 3;
 % Calculating the width for each bar group
 groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, y(:,i), err(:,i), 'k.');
+    errorbar(x, y(i,:), err(i,:), 'k.');
 end
-ylim([0 100])
+ylim([0 105])
 
 if plotcount == 1
-    legend('Accuracy','Sensitivity','Specificity','PPV','Location','Northwest');
+    legend('1-controller','2-controller','3-controller','Location','Northwest');
 end
 ylabel('%');
 title({'Smaller Synthetic Model';'Noiseless'});
@@ -158,34 +155,31 @@ subplot(2,2,plotcount)
 y = 100*[nanmean(accuracy_1contMet) nanmean(sensitivity_1contMet) nanmean(specificity_1contMet) nanmean(ppv_1contMet);...
     nanmean(accuracy_2contMet) nanmean(sensitivity_2contMet) nanmean(specificity_2contMet) nanmean(ppv_2contMet);...
     nanmean(accuracy_3contMet) nanmean(sensitivity_3contMet) nanmean(specificity_3contMet) nanmean(ppv_3contMet)];
-bar(y);
+bar(y');
 
-row1 = {'1-controller' '2-controller' '3-controller'};
-row2 = {'interaction' 'interaction' 'interaction'};
-labelArray = [row1; row2]; 
-tickLabels = strtrim(sprintf('%s\\newline%s\n', labelArray{:}));
+row = {'Accuracy' 'Sensitivity' 'Specificity' 'PPV'}; 
 ax = gca(); 
-ax.XTick = 1:3; 
-ax.XLim = [0,4];
-ax.XTickLabel = tickLabels; 
+ax.XTick = 1:4; 
+ax.XLim = [0,5];
+ax.XTickLabel = row; 
 hold on
 
 % Error bars
 err = 100*[nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet))) nanstd(sensitivity_1contMet)/sqrt(sum(~isnan(sensitivity_1contMet))) nanstd(specificity_1contMet)/sqrt(sum(~isnan(specificity_1contMet))) nanstd(ppv_1contMet)/sqrt(sum(~isnan(ppv_1contMet)));...
     nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet))) nanstd(sensitivity_2contMet)/sqrt(sum(~isnan(sensitivity_2contMet))) nanstd(specificity_2contMet)/sqrt(sum(~isnan(specificity_2contMet))) nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));...
     nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet))) nanstd(sensitivity_3contMet)/sqrt(sum(~isnan(sensitivity_3contMet))) nanstd(specificity_3contMet)/sqrt(sum(~isnan(specificity_3contMet))) nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)))];
-ngroups = 3;
-nbars = 4;
+ngroups = 4;
+nbars = 3;
 % Calculating the width for each bar group
 groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, y(:,i), err(:,i), 'k.');
+    errorbar(x, y(i,:), err(i,:), 'k.');
 end
-ylim([0 100])
+ylim([0 105])
 
 if plotcount == 1
-    legend('Accuracy','Sensitivity','Specificity','PPV','Location','Northwest');
+    legend('1-controller','2-controller','3-controller','Location','Northwest');
 end
 ylabel('%');
 title({'Bigger Synthetic Model';'Noiseless'});
@@ -242,34 +236,31 @@ subplot(2,2,plotcount)
 y = 100*[nanmean(accuracy_1contMet) nanmean(sensitivity_1contMet) nanmean(specificity_1contMet) nanmean(ppv_1contMet);...
     nanmean(accuracy_2contMet) nanmean(sensitivity_2contMet) nanmean(specificity_2contMet) nanmean(ppv_2contMet);...
     nanmean(accuracy_3contMet) nanmean(sensitivity_3contMet) nanmean(specificity_3contMet) nanmean(ppv_3contMet)];
-bar(y);
+bar(y');
 
-row1 = {'1-controller' '2-controller' '3-controller'};
-row2 = {'interaction' 'interaction' 'interaction'};
-labelArray = [row1; row2]; 
-tickLabels = strtrim(sprintf('%s\\newline%s\n', labelArray{:}));
+row = {'Accuracy' 'Sensitivity' 'Specificity' 'PPV'}; 
 ax = gca(); 
-ax.XTick = 1:3; 
-ax.XLim = [0,4];
-ax.XTickLabel = tickLabels; 
+ax.XTick = 1:4; 
+ax.XLim = [0,5];
+ax.XTickLabel = row; 
 hold on
 
 % Error bars
 err = 100*[nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet))) nanstd(sensitivity_1contMet)/sqrt(sum(~isnan(sensitivity_1contMet))) nanstd(specificity_1contMet)/sqrt(sum(~isnan(specificity_1contMet))) nanstd(ppv_1contMet)/sqrt(sum(~isnan(ppv_1contMet)));...
     nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet))) nanstd(sensitivity_2contMet)/sqrt(sum(~isnan(sensitivity_2contMet))) nanstd(specificity_2contMet)/sqrt(sum(~isnan(specificity_2contMet))) nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));...
     nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet))) nanstd(sensitivity_3contMet)/sqrt(sum(~isnan(sensitivity_3contMet))) nanstd(specificity_3contMet)/sqrt(sum(~isnan(specificity_3contMet))) nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)))];
-ngroups = 3;
-nbars = 4;
+ngroups = 4;
+nbars = 3;
 % Calculating the width for each bar group
 groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, y(:,i), err(:,i), 'k.');
+    errorbar(x, y(i,:), err(i,:), 'k.');
 end
-ylim([0 100])
+ylim([0 105])
 
 if plotcount == 1
-    legend('Accuracy','Sensitivity','Specificity','PPV','Location','Northwest');
+    legend('1-controller','2-controller','3-controller','Location','Northwest');
 end
 ylabel('%');
 title({'S. cerevisiae Model';'Noiseless'});
@@ -328,34 +319,31 @@ subplot(2,2,plotcount)
 y = 100*[nanmean(accuracy_1contMet) nanmean(sensitivity_1contMet) nanmean(specificity_1contMet) nanmean(ppv_1contMet);...
     nanmean(accuracy_2contMet) nanmean(sensitivity_2contMet) nanmean(specificity_2contMet) nanmean(ppv_2contMet);...
     nanmean(accuracy_3contMet) nanmean(sensitivity_3contMet) nanmean(specificity_3contMet) nanmean(ppv_3contMet)];
-bar(y);
+bar(y');
 
-row1 = {'1-controller' '2-controller' '3-controller'};
-row2 = {'interaction' 'interaction' 'interaction'};
-labelArray = [row1; row2]; 
-tickLabels = strtrim(sprintf('%s\\newline%s\n', labelArray{:}));
+row = {'Accuracy' 'Sensitivity' 'Specificity' 'PPV'}; 
 ax = gca(); 
-ax.XTick = 1:3; 
-ax.XLim = [0,4];
-ax.XTickLabel = tickLabels; 
+ax.XTick = 1:4; 
+ax.XLim = [0,5];
+ax.XTickLabel = row; 
 hold on
 
 % Error bars
 err = 100*[nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet))) nanstd(sensitivity_1contMet)/sqrt(sum(~isnan(sensitivity_1contMet))) nanstd(specificity_1contMet)/sqrt(sum(~isnan(specificity_1contMet))) nanstd(ppv_1contMet)/sqrt(sum(~isnan(ppv_1contMet)));...
     nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet))) nanstd(sensitivity_2contMet)/sqrt(sum(~isnan(sensitivity_2contMet))) nanstd(specificity_2contMet)/sqrt(sum(~isnan(specificity_2contMet))) nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));...
     nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet))) nanstd(sensitivity_3contMet)/sqrt(sum(~isnan(sensitivity_3contMet))) nanstd(specificity_3contMet)/sqrt(sum(~isnan(specificity_3contMet))) nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)))];
-ngroups = 3;
-nbars = 4;
+ngroups = 4;
+nbars = 3;
 % Calculating the width for each bar group
 groupwidth = min(0.8, nbars/(nbars + 1.5));
 for i = 1:nbars
     x = (1:ngroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*nbars);
-    errorbar(x, y(:,i), err(:,i), 'k.');
+    errorbar(x, y(i,:), err(i,:), 'k.');
 end
-ylim([0 100])
+ylim([0 105])
 
 if plotcount == 1
-    legend('Accuracy','Sensitivity','Specificity','PPV','Location','Northwest');
+    legend('1-controller','2-controller','3-controller','Location','Northwest');
 end
 ylabel('%');
 title({'E. coli Model';'Noiseless'});

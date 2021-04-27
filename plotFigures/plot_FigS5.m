@@ -27,21 +27,17 @@ for cov = [5 15]
         ppv_2contMet = [];
         ppv_3contMet = [];
         
-        accuracy_1contMet_random = [];
-        accuracy_2contMet_random = [];
-        accuracy_3contMet_random = [];
-        
-        sensitivity_1contMet_random = [];
-        sensitivity_2contMet_random = [];
-        sensitivity_3contMet_random = [];
-        
-        specificity_1contMet_random = [];
-        specificity_2contMet_random = [];
-        specificity_3contMet_random = [];
+        F1_1contMet = [];
+        F1_2contMet = [];
+        F1_3contMet = [];
         
         ppv_1contMet_random = [];
         ppv_2contMet_random = [];
         ppv_3contMet_random = [];
+        
+        F1_1contMet_random = [];
+        F1_2contMet_random = [];
+        F1_3contMet_random = [];
         
         for rep = 1:repetitions
             filename = sprintf('results/synthetic_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep);
@@ -51,8 +47,8 @@ for cov = [5 15]
                 'ppv_SmallerModel_1contMet','ppv_SmallerModel_2contMet','ppv_SmallerModel_3contMet');
             
             randomdata = load(sprintf('results/randomclassifier/synthetic_random_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep),...
+                'sensitivity_SmallerModel_1contMet','sensitivity_SmallerModel_2contMet','sensitivity_SmallerModel_3contMet',...
                 'ppv_SmallerModel_1contMet','ppv_SmallerModel_2contMet','ppv_SmallerModel_3contMet');
-            
             
             accuracy_1contMet = [accuracy_1contMet; predictionAccuracy_SmallerModel_1contMet];
             accuracy_2contMet = [accuracy_2contMet; predictionAccuracy_SmallerModel_2contMet];
@@ -78,12 +74,22 @@ for cov = [5 15]
                 if exist('ppv_SmallerModel_3contMet','var')
                     ppv_3contMet = [ppv_3contMet; ppv_SmallerModel_3contMet];
                 end
+                
+                F1_1contMet = [F1_1contMet (ppv_SmallerModel_1contMet*sensitivity_SmallerModel_1contMet)/(ppv_SmallerModel_1contMet + sensitivity_SmallerModel_1contMet)];
+                F1_2contMet = [F1_1contMet (ppv_SmallerModel_2contMet*sensitivity_SmallerModel_2contMet)/(ppv_SmallerModel_2contMet + sensitivity_SmallerModel_2contMet)];
+                if exist('ppv_SmallerModel_3contMet','var')
+                    F1_3contMet = [F1_3contMet (ppv_SmallerModel_3contMet*sensitivity_SmallerModel_3contMet)/(ppv_SmallerModel_3contMet + sensitivity_SmallerModel_3contMet)];
+                end
             end
             
             
             ppv_1contMet_random = [ppv_1contMet_random; randomdata.ppv_SmallerModel_1contMet];
             ppv_2contMet_random = [ppv_2contMet_random; randomdata.ppv_SmallerModel_2contMet];
             ppv_3contMet_random = [ppv_3contMet_random; randomdata.ppv_SmallerModel_3contMet];
+            
+            F1_1contMet_random = [F1_1contMet_random; (randomdata.ppv_SmallerModel_1contMet*randomdata.sensitivity_SmallerModel_1contMet)/(randomdata.ppv_SmallerModel_1contMet + sensitivity_SmallerModel_1contMet)];
+            F1_2contMet_random = [F1_2contMet_random; (randomdata.ppv_SmallerModel_1contMet*randomdata.sensitivity_SmallerModel_1contMet)/(randomdata.ppv_SmallerModel_1contMet + sensitivity_SmallerModel_1contMet)];
+            F1_3contMet_random = [F1_3contMet_random; (randomdata.ppv_SmallerModel_1contMet*randomdata.sensitivity_SmallerModel_1contMet)/(randomdata.ppv_SmallerModel_1contMet + sensitivity_SmallerModel_1contMet)];
         end
         mean_accuracy_1contMet(condition_count) = nanmean(accuracy_1contMet);
         mean_accuracy_2contMet(condition_count) = nanmean(accuracy_2contMet);
@@ -101,6 +107,10 @@ for cov = [5 15]
         mean_ppv_2contMet(condition_count) = nanmean(ppv_2contMet);
         mean_ppv_3contMet(condition_count) = nanmean(ppv_3contMet);
         
+        mean_F1_1contMet(condition_count) = nanmean(F1_1contMet);
+        mean_F1_2contMet(condition_count) = nanmean(F1_2contMet);
+        mean_F1_3contMet(condition_count) = nanmean(F1_3contMet);
+        
         sem_accuracy_1contMet(condition_count) = nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet)));
         sem_accuracy_2contMet(condition_count) = nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet)));
         sem_accuracy_3contMet(condition_count) = nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet)));
@@ -117,14 +127,26 @@ for cov = [5 15]
         sem_ppv_2contMet(condition_count) = nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));
         sem_ppv_3contMet(condition_count) = nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)));
         
+        sem_F1_1contMet(condition_count) = nanstd(F1_1contMet)/sqrt(sum(~isnan(F1_1contMet)));
+        sem_F1_2contMet(condition_count) = nanstd(F1_2contMet)/sqrt(sum(~isnan(F1_2contMet)));
+        sem_F1_3contMet(condition_count) = nanstd(F1_3contMet)/sqrt(sum(~isnan(F1_3contMet)));
+        
         
         mean_ppv_1contMet_random(condition_count) = nanmean(ppv_1contMet_random);
         mean_ppv_2contMet_random(condition_count) = nanmean(ppv_2contMet_random);
         mean_ppv_3contMet_random(condition_count) = nanmean(ppv_3contMet_random);
         
+        mean_F1_1contMet_random(condition_count) = nanmean(F1_1contMet_random);
+        mean_F1_2contMet_random(condition_count) = nanmean(F1_2contMet_random);
+        mean_F1_3contMet_random(condition_count) = nanmean(F1_3contMet_random);
+        
         sem_ppv_1contMet_random(condition_count) = nanstd(ppv_1contMet_random)/sqrt(sum(~isnan(ppv_1contMet_random)));
         sem_ppv_2contMet_random(condition_count) = nanstd(ppv_2contMet_random)/sqrt(sum(~isnan(ppv_2contMet_random)));
         sem_ppv_3contMet_random(condition_count) = nanstd(ppv_3contMet_random)/sqrt(sum(~isnan(ppv_3contMet_random)));
+        
+        sem_F1_1contMet_random(condition_count) = nanstd(F1_1contMet_random)/sqrt(sum(~isnan(F1_1contMet_random)));
+        sem_F1_2contMet_random(condition_count) = nanstd(F1_2contMet_random)/sqrt(sum(~isnan(F1_2contMet_random)));
+        sem_F1_3contMet_random(condition_count) = nanstd(F1_3contMet_random)/sqrt(sum(~isnan(F1_3contMet_random)));
         
         condition_count = condition_count + 1;
     end
@@ -144,11 +166,8 @@ a.FontWeight = 'bold';
 
 subplot(4,3,1)
 hold on
-errorbar(1:4,100*mean_accuracy_1contMet,100*sem_accuracy_1contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_1contMet,100*sem_sensitivity_1contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_1contMet,100*sem_specificity_1contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet,100*sem_ppv_1contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet_random,100*sem_ppv_1contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet,100*sem_F1_1contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet_random,100*sem_F1_1contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -158,7 +177,7 @@ ax = gca();
 ax.XTick = 1:4; 
 ax.XLim = [0,5];
 ax.XTickLabel = tickLabels;
-legend('Accuracy','Sensitivity','Specificity','PPV','PPV Random','FontSize',11,'location','northwest')
+legend('F1 Score','F1 Score Random','FontSize',11,'location','northwest')
 set(gca,'FontSize',11)
 title({'Small Synthetic Model','One-Controller Metabolite'},'FontSize',13);
 ylabel('%')
@@ -167,11 +186,8 @@ ylim([-5 110]);
 
 subplot(4,3,2)
 hold on
-errorbar(1:4,100*mean_accuracy_2contMet,100*sem_accuracy_2contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_2contMet,100*sem_sensitivity_2contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_2contMet,100*sem_specificity_2contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet,100*sem_ppv_2contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet_random,100*sem_ppv_2contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet,100*sem_F1_2contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet_random,100*sem_F1_2contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -189,11 +205,8 @@ ylim([-5 110]);
 
 subplot(4,3,3)
 hold on
-errorbar(1:4,100*mean_accuracy_3contMet,100*sem_accuracy_3contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_3contMet,100*sem_sensitivity_3contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_3contMet,100*sem_specificity_3contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet,100*sem_ppv_3contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet_random,100*sem_ppv_3contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet,100*sem_F1_3contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet_random,100*sem_F1_3contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -230,9 +243,17 @@ for cov = [5 15]
         ppv_2contMet = [];
         ppv_3contMet = [];
         
+        F1_1contMet = [];
+        F1_2contMet = [];
+        F1_3contMet = [];
+        
         ppv_1contMet_random = [];
         ppv_2contMet_random = [];
         ppv_3contMet_random = [];
+        
+        F1_1contMet_random = [];
+        F1_2contMet_random = [];
+        F1_3contMet_random = [];
         
         for rep = 1:repetitions
             filename = sprintf('results/synthetic_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep);
@@ -242,6 +263,7 @@ for cov = [5 15]
                 'ppv_BiggerModel_1contMet','ppv_BiggerModel_2contMet','ppv_BiggerModel_3contMet');
             
             randomdata = load(sprintf('results/randomclassifier/synthetic_random_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep),...
+                'sensitivity_BiggerModel_1contMet','sensitivity_BiggerModel_2contMet','sensitivity_BiggerModel_3contMet',...
                 'ppv_BiggerModel_1contMet','ppv_BiggerModel_2contMet','ppv_BiggerModel_3contMet');
             
             
@@ -269,12 +291,22 @@ for cov = [5 15]
                 if exist('ppv_BiggerModel_3contMet','var')
                     ppv_3contMet = [ppv_3contMet; ppv_BiggerModel_3contMet];
                 end
+                
+                F1_1contMet = [F1_1contMet (ppv_BiggerModel_1contMet*sensitivity_BiggerModel_1contMet)/(ppv_BiggerModel_1contMet + sensitivity_BiggerModel_1contMet)];
+                F1_2contMet = [F1_1contMet (ppv_BiggerModel_2contMet*sensitivity_BiggerModel_2contMet)/(ppv_BiggerModel_2contMet + sensitivity_BiggerModel_2contMet)];
+                if exist('ppv_BiggerModel_3contMet','var')
+                    F1_3contMet = [F1_3contMet (ppv_BiggerModel_3contMet*sensitivity_BiggerModel_3contMet)/(ppv_BiggerModel_3contMet + sensitivity_BiggerModel_3contMet)];
+                end
             end
             
             
             ppv_1contMet_random = [ppv_1contMet_random; randomdata.ppv_BiggerModel_1contMet];
             ppv_2contMet_random = [ppv_2contMet_random; randomdata.ppv_BiggerModel_2contMet];
             ppv_3contMet_random = [ppv_3contMet_random; randomdata.ppv_BiggerModel_3contMet];
+            
+            F1_1contMet_random = [F1_1contMet_random; (randomdata.ppv_BiggerModel_1contMet*randomdata.sensitivity_BiggerModel_1contMet)/(randomdata.ppv_BiggerModel_1contMet + sensitivity_BiggerModel_1contMet)];
+            F1_2contMet_random = [F1_2contMet_random; (randomdata.ppv_BiggerModel_1contMet*randomdata.sensitivity_BiggerModel_1contMet)/(randomdata.ppv_BiggerModel_1contMet + sensitivity_BiggerModel_1contMet)];
+            F1_3contMet_random = [F1_3contMet_random; (randomdata.ppv_BiggerModel_1contMet*randomdata.sensitivity_BiggerModel_1contMet)/(randomdata.ppv_BiggerModel_1contMet + sensitivity_BiggerModel_1contMet)];
         end
         mean_accuracy_1contMet(condition_count) = nanmean(accuracy_1contMet);
         mean_accuracy_2contMet(condition_count) = nanmean(accuracy_2contMet);
@@ -292,6 +324,10 @@ for cov = [5 15]
         mean_ppv_2contMet(condition_count) = nanmean(ppv_2contMet);
         mean_ppv_3contMet(condition_count) = nanmean(ppv_3contMet);
         
+        mean_F1_1contMet(condition_count) = nanmean(F1_1contMet);
+        mean_F1_2contMet(condition_count) = nanmean(F1_2contMet);
+        mean_F1_3contMet(condition_count) = nanmean(F1_3contMet);
+        
         sem_accuracy_1contMet(condition_count) = nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet)));
         sem_accuracy_2contMet(condition_count) = nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet)));
         sem_accuracy_3contMet(condition_count) = nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet)));
@@ -308,14 +344,26 @@ for cov = [5 15]
         sem_ppv_2contMet(condition_count) = nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));
         sem_ppv_3contMet(condition_count) = nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)));
         
+        sem_F1_1contMet(condition_count) = nanstd(F1_1contMet)/sqrt(sum(~isnan(F1_1contMet)));
+        sem_F1_2contMet(condition_count) = nanstd(F1_2contMet)/sqrt(sum(~isnan(F1_2contMet)));
+        sem_F1_3contMet(condition_count) = nanstd(F1_3contMet)/sqrt(sum(~isnan(F1_3contMet)));
+        
         
         mean_ppv_1contMet_random(condition_count) = nanmean(ppv_1contMet_random);
         mean_ppv_2contMet_random(condition_count) = nanmean(ppv_2contMet_random);
         mean_ppv_3contMet_random(condition_count) = nanmean(ppv_3contMet_random);
         
+        mean_F1_1contMet_random(condition_count) = nanmean(F1_1contMet_random);
+        mean_F1_2contMet_random(condition_count) = nanmean(F1_2contMet_random);
+        mean_F1_3contMet_random(condition_count) = nanmean(F1_3contMet_random);
+        
         sem_ppv_1contMet_random(condition_count) = nanstd(ppv_1contMet_random)/sqrt(sum(~isnan(ppv_1contMet_random)));
         sem_ppv_2contMet_random(condition_count) = nanstd(ppv_2contMet_random)/sqrt(sum(~isnan(ppv_2contMet_random)));
         sem_ppv_3contMet_random(condition_count) = nanstd(ppv_3contMet_random)/sqrt(sum(~isnan(ppv_3contMet_random)));
+        
+        sem_F1_1contMet_random(condition_count) = nanstd(F1_1contMet_random)/sqrt(sum(~isnan(F1_1contMet_random)));
+        sem_F1_2contMet_random(condition_count) = nanstd(F1_2contMet_random)/sqrt(sum(~isnan(F1_2contMet_random)));
+        sem_F1_3contMet_random(condition_count) = nanstd(F1_3contMet_random)/sqrt(sum(~isnan(F1_3contMet_random)));
         
         condition_count = condition_count + 1;
     end
@@ -335,11 +383,8 @@ a.FontWeight = 'bold';
 
 subplot(4,3,4)
 hold on
-errorbar(1:4,100*mean_accuracy_1contMet,100*sem_accuracy_1contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_1contMet,100*sem_sensitivity_1contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_1contMet,100*sem_specificity_1contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet,100*sem_ppv_1contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet_random,100*sem_ppv_1contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet,100*sem_F1_1contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet_random,100*sem_F1_1contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -357,11 +402,8 @@ ylim([-5 110]);
 
 subplot(4,3,5)
 hold on
-errorbar(1:4,100*mean_accuracy_2contMet,100*sem_accuracy_2contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_2contMet,100*sem_sensitivity_2contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_2contMet,100*sem_specificity_2contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet,100*sem_ppv_2contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet_random,100*sem_ppv_2contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet,100*sem_F1_2contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet_random,100*sem_F1_2contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -379,11 +421,8 @@ ylim([-5 110]);
 
 subplot(4,3,6)
 hold on
-errorbar(1:4,100*mean_accuracy_3contMet,100*sem_accuracy_3contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_3contMet,100*sem_sensitivity_3contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_3contMet,100*sem_specificity_3contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet,100*sem_ppv_3contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet_random,100*sem_ppv_3contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet,100*sem_F1_3contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet_random,100*sem_F1_3contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -419,9 +458,17 @@ for cov = [5 15]
         ppv_2contMet = [];
         ppv_3contMet = [];
         
+        F1_1contMet = [];
+        F1_2contMet = [];
+        F1_3contMet = [];
+        
         ppv_1contMet_random = [];
         ppv_2contMet_random = [];
         ppv_3contMet_random = [];
+        
+        F1_1contMet_random = [];
+        F1_2contMet_random = [];
+        F1_3contMet_random = [];
         
         for rep = 1:repetitions
             filename = sprintf('results/yeast_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep);
@@ -431,6 +478,7 @@ for cov = [5 15]
                 'ppv_Hynne_1contMet','ppv_Hynne_2contMet','ppv_Hynne_3contMet');
             
             randomdata = load(sprintf('results/randomclassifier/yeast_random_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep),...
+                'sensitivity_Hynne_1contMet','sensitivity_Hynne_2contMet','sensitivity_Hynne_3contMet',...
                 'ppv_Hynne_1contMet','ppv_Hynne_2contMet','ppv_Hynne_3contMet');
             
             
@@ -449,13 +497,25 @@ for cov = [5 15]
             if exist('ppv_Hynne_1contMet','var')
                 ppv_1contMet = [ppv_1contMet; ppv_Hynne_1contMet];
                 ppv_2contMet = [ppv_2contMet; ppv_Hynne_2contMet];
-                ppv_3contMet = [ppv_3contMet; ppv_Hynne_3contMet];
+                if exist('ppv_Hynne_3contMet','var')
+                    ppv_3contMet = [ppv_3contMet; ppv_Hynne_3contMet];
+                end
+                
+                F1_1contMet = [F1_1contMet (ppv_Hynne_1contMet*sensitivity_Hynne_1contMet)/(ppv_Hynne_1contMet + sensitivity_Hynne_1contMet)];
+                F1_2contMet = [F1_1contMet (ppv_Hynne_2contMet*sensitivity_Hynne_2contMet)/(ppv_Hynne_2contMet + sensitivity_Hynne_2contMet)];
+                if exist('ppv_Hynne_3contMet','var')
+                    F1_3contMet = [F1_3contMet (ppv_Hynne_3contMet*sensitivity_Hynne_3contMet)/(ppv_Hynne_3contMet + sensitivity_Hynne_3contMet)];
+                end
             end
             
             
             ppv_1contMet_random = [ppv_1contMet_random; randomdata.ppv_Hynne_1contMet];
             ppv_2contMet_random = [ppv_2contMet_random; randomdata.ppv_Hynne_2contMet];
             ppv_3contMet_random = [ppv_3contMet_random; randomdata.ppv_Hynne_3contMet];
+            
+            F1_1contMet_random = [F1_1contMet_random; (randomdata.ppv_Hynne_1contMet*randomdata.sensitivity_Hynne_1contMet)/(randomdata.ppv_Hynne_1contMet + sensitivity_Hynne_1contMet)];
+            F1_2contMet_random = [F1_2contMet_random; (randomdata.ppv_Hynne_1contMet*randomdata.sensitivity_Hynne_1contMet)/(randomdata.ppv_Hynne_1contMet + sensitivity_Hynne_1contMet)];
+            F1_3contMet_random = [F1_3contMet_random; (randomdata.ppv_Hynne_1contMet*randomdata.sensitivity_Hynne_1contMet)/(randomdata.ppv_Hynne_1contMet + sensitivity_Hynne_1contMet)];
         end
         mean_accuracy_1contMet(condition_count) = nanmean(accuracy_1contMet);
         mean_accuracy_2contMet(condition_count) = nanmean(accuracy_2contMet);
@@ -473,6 +533,10 @@ for cov = [5 15]
         mean_ppv_2contMet(condition_count) = nanmean(ppv_2contMet);
         mean_ppv_3contMet(condition_count) = nanmean(ppv_3contMet);
         
+        mean_F1_1contMet(condition_count) = nanmean(F1_1contMet);
+        mean_F1_2contMet(condition_count) = nanmean(F1_2contMet);
+        mean_F1_3contMet(condition_count) = nanmean(F1_3contMet);
+        
         sem_accuracy_1contMet(condition_count) = nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet)));
         sem_accuracy_2contMet(condition_count) = nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet)));
         sem_accuracy_3contMet(condition_count) = nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet)));
@@ -489,14 +553,26 @@ for cov = [5 15]
         sem_ppv_2contMet(condition_count) = nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));
         sem_ppv_3contMet(condition_count) = nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)));
         
+        sem_F1_1contMet(condition_count) = nanstd(F1_1contMet)/sqrt(sum(~isnan(F1_1contMet)));
+        sem_F1_2contMet(condition_count) = nanstd(F1_2contMet)/sqrt(sum(~isnan(F1_2contMet)));
+        sem_F1_3contMet(condition_count) = nanstd(F1_3contMet)/sqrt(sum(~isnan(F1_3contMet)));
+        
         
         mean_ppv_1contMet_random(condition_count) = nanmean(ppv_1contMet_random);
         mean_ppv_2contMet_random(condition_count) = nanmean(ppv_2contMet_random);
         mean_ppv_3contMet_random(condition_count) = nanmean(ppv_3contMet_random);
         
+        mean_F1_1contMet_random(condition_count) = nanmean(F1_1contMet_random);
+        mean_F1_2contMet_random(condition_count) = nanmean(F1_2contMet_random);
+        mean_F1_3contMet_random(condition_count) = nanmean(F1_3contMet_random);
+        
         sem_ppv_1contMet_random(condition_count) = nanstd(ppv_1contMet_random)/sqrt(sum(~isnan(ppv_1contMet_random)));
         sem_ppv_2contMet_random(condition_count) = nanstd(ppv_2contMet_random)/sqrt(sum(~isnan(ppv_2contMet_random)));
         sem_ppv_3contMet_random(condition_count) = nanstd(ppv_3contMet_random)/sqrt(sum(~isnan(ppv_3contMet_random)));
+        
+        sem_F1_1contMet_random(condition_count) = nanstd(F1_1contMet_random)/sqrt(sum(~isnan(F1_1contMet_random)));
+        sem_F1_2contMet_random(condition_count) = nanstd(F1_2contMet_random)/sqrt(sum(~isnan(F1_2contMet_random)));
+        sem_F1_3contMet_random(condition_count) = nanstd(F1_3contMet_random)/sqrt(sum(~isnan(F1_3contMet_random)));
         
         condition_count = condition_count + 1;
     end
@@ -516,11 +592,8 @@ a.FontWeight = 'bold';
 
 subplot(4,3,7)
 hold on
-errorbar(1:4,100*mean_accuracy_1contMet,100*sem_accuracy_1contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_1contMet,100*sem_sensitivity_1contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_1contMet,100*sem_specificity_1contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet,100*sem_ppv_1contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet_random,100*sem_ppv_1contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet,100*sem_F1_1contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet_random,100*sem_F1_1contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -538,11 +611,8 @@ ylim([-5 110]);
 
 subplot(4,3,8)
 hold on
-errorbar(1:4,100*mean_accuracy_2contMet,100*sem_accuracy_2contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_2contMet,100*sem_sensitivity_2contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_2contMet,100*sem_specificity_2contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet,100*sem_ppv_2contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet_random,100*sem_ppv_2contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet,100*sem_F1_2contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet_random,100*sem_F1_2contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -560,11 +630,8 @@ ylim([-5 110]);
 
 subplot(4,3,9)
 hold on
-errorbar(1:4,100*mean_accuracy_3contMet,100*sem_accuracy_3contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_3contMet,100*sem_sensitivity_3contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_3contMet,100*sem_specificity_3contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet,100*sem_ppv_3contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet_random,100*sem_ppv_3contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet,100*sem_F1_3contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet_random,100*sem_F1_3contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -601,9 +668,17 @@ for cov = [5 15]
         ppv_2contMet = [];
         ppv_3contMet = [];
         
+        F1_1contMet = [];
+        F1_2contMet = [];
+        F1_3contMet = [];
+        
         ppv_1contMet_random = [];
         ppv_2contMet_random = [];
         ppv_3contMet_random = [];
+        
+        F1_1contMet_random = [];
+        F1_2contMet_random = [];
+        F1_3contMet_random = [];
         
         for rep = 1:repetitions
             filename = sprintf('results/ecoli_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep);
@@ -614,7 +689,8 @@ for cov = [5 15]
                 'ppv_Chass_1contMet','ppv_Chass_2contMet','ppv_Chass_3contMet');
 
                 randomdata = load(sprintf('results/randomclassifier/ecoli_random_results_IC-15_nT-%03d_cov-%02d_rep-%02d_compact.mat',nT,cov,rep),...
-                'ppv_Chass_1contMet','ppv_Chass_2contMet','ppv_Chass_3contMet');
+                    'sensitivity_Chass_1contMet','sensitivity_Chass_2contMet','sensitivity_Chass_3contMet',...
+                    'ppv_Chass_1contMet','ppv_Chass_2contMet','ppv_Chass_3contMet');
             
             
                 accuracy_1contMet = [accuracy_1contMet; predictionAccuracy_Chass_1contMet];
@@ -641,12 +717,22 @@ for cov = [5 15]
                     if exist('ppv_Chass_3contMet','var')
                         ppv_3contMet = [ppv_3contMet; ppv_Chass_3contMet];
                     end
+                    
+                    F1_1contMet = [F1_1contMet (ppv_Chass_1contMet*sensitivity_Chass_1contMet)/(ppv_Chass_1contMet + sensitivity_Chass_1contMet)];
+                    F1_2contMet = [F1_1contMet (ppv_Chass_2contMet*sensitivity_Chass_2contMet)/(ppv_Chass_2contMet + sensitivity_Chass_2contMet)];
+                    if exist('ppv_Chass_3contMet','var')
+                        F1_3contMet = [F1_3contMet (ppv_Chass_3contMet*sensitivity_Chass_3contMet)/(ppv_Chass_3contMet + sensitivity_Chass_3contMet)];
+                    end
                 end
                 
                 
                 ppv_1contMet_random = [ppv_1contMet_random; randomdata.ppv_Chass_1contMet];
                 ppv_2contMet_random = [ppv_2contMet_random; randomdata.ppv_Chass_2contMet];
                 ppv_3contMet_random = [ppv_3contMet_random; randomdata.ppv_Chass_3contMet];
+                
+                F1_1contMet_random = [F1_1contMet_random; (randomdata.ppv_Chass_1contMet*randomdata.sensitivity_Chass_1contMet)/(randomdata.ppv_Chass_1contMet + sensitivity_Chass_1contMet)];
+                F1_2contMet_random = [F1_2contMet_random; (randomdata.ppv_Chass_1contMet*randomdata.sensitivity_Chass_1contMet)/(randomdata.ppv_Chass_1contMet + sensitivity_Chass_1contMet)];
+                F1_3contMet_random = [F1_3contMet_random; (randomdata.ppv_Chass_1contMet*randomdata.sensitivity_Chass_1contMet)/(randomdata.ppv_Chass_1contMet + sensitivity_Chass_1contMet)];
             end
         end
         mean_accuracy_1contMet(condition_count) = nanmean(accuracy_1contMet);
@@ -665,6 +751,10 @@ for cov = [5 15]
         mean_ppv_2contMet(condition_count) = nanmean(ppv_2contMet);
         mean_ppv_3contMet(condition_count) = nanmean(ppv_3contMet);
         
+        mean_F1_1contMet(condition_count) = nanmean(F1_1contMet);
+        mean_F1_2contMet(condition_count) = nanmean(F1_2contMet);
+        mean_F1_3contMet(condition_count) = nanmean(F1_3contMet);
+        
         sem_accuracy_1contMet(condition_count) = nanstd(accuracy_1contMet)/sqrt(sum(~isnan(accuracy_1contMet)));
         sem_accuracy_2contMet(condition_count) = nanstd(accuracy_2contMet)/sqrt(sum(~isnan(accuracy_2contMet)));
         sem_accuracy_3contMet(condition_count) = nanstd(accuracy_3contMet)/sqrt(sum(~isnan(accuracy_3contMet)));
@@ -681,14 +771,26 @@ for cov = [5 15]
         sem_ppv_2contMet(condition_count) = nanstd(ppv_2contMet)/sqrt(sum(~isnan(ppv_2contMet)));
         sem_ppv_3contMet(condition_count) = nanstd(ppv_3contMet)/sqrt(sum(~isnan(ppv_3contMet)));
         
+        sem_F1_1contMet(condition_count) = nanstd(F1_1contMet)/sqrt(sum(~isnan(F1_1contMet)));
+        sem_F1_2contMet(condition_count) = nanstd(F1_2contMet)/sqrt(sum(~isnan(F1_2contMet)));
+        sem_F1_3contMet(condition_count) = nanstd(F1_3contMet)/sqrt(sum(~isnan(F1_3contMet)));
+        
         
         mean_ppv_1contMet_random(condition_count) = nanmean(ppv_1contMet_random);
         mean_ppv_2contMet_random(condition_count) = nanmean(ppv_2contMet_random);
         mean_ppv_3contMet_random(condition_count) = nanmean(ppv_3contMet_random);
         
+        mean_F1_1contMet_random(condition_count) = nanmean(F1_1contMet_random);
+        mean_F1_2contMet_random(condition_count) = nanmean(F1_2contMet_random);
+        mean_F1_3contMet_random(condition_count) = nanmean(F1_3contMet_random);
+        
         sem_ppv_1contMet_random(condition_count) = nanstd(ppv_1contMet_random)/sqrt(sum(~isnan(ppv_1contMet_random)));
         sem_ppv_2contMet_random(condition_count) = nanstd(ppv_2contMet_random)/sqrt(sum(~isnan(ppv_2contMet_random)));
         sem_ppv_3contMet_random(condition_count) = nanstd(ppv_3contMet_random)/sqrt(sum(~isnan(ppv_3contMet_random)));
+        
+        sem_F1_1contMet_random(condition_count) = nanstd(F1_1contMet_random)/sqrt(sum(~isnan(F1_1contMet_random)));
+        sem_F1_2contMet_random(condition_count) = nanstd(F1_2contMet_random)/sqrt(sum(~isnan(F1_2contMet_random)));
+        sem_F1_3contMet_random(condition_count) = nanstd(F1_3contMet_random)/sqrt(sum(~isnan(F1_3contMet_random)));
         
         condition_count = condition_count + 1;
     end
@@ -708,11 +810,8 @@ a.FontWeight = 'bold';
 
 subplot(4,3,10)
 hold on
-errorbar(1:4,100*mean_accuracy_1contMet,100*sem_accuracy_1contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_1contMet,100*sem_sensitivity_1contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_1contMet,100*sem_specificity_1contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet,100*sem_ppv_1contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_1contMet_random,100*sem_ppv_1contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet,100*sem_F1_1contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_1contMet_random,100*sem_F1_1contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -730,11 +829,8 @@ ylim([-5 110]);
 
 subplot(4,3,11)
 hold on
-errorbar(1:4,100*mean_accuracy_2contMet,100*sem_accuracy_2contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_2contMet,100*sem_sensitivity_2contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_2contMet,100*sem_specificity_2contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet,100*sem_ppv_2contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_2contMet_random,100*sem_ppv_2contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet,100*sem_F1_2contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_2contMet_random,100*sem_F1_2contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
@@ -752,11 +848,8 @@ ylim([-5 110]);
 
 subplot(4,3,12)
 hold on
-errorbar(1:4,100*mean_accuracy_3contMet,100*sem_accuracy_3contMet,'r','LineWidth',1.5);
-errorbar(1:4,100*mean_sensitivity_3contMet,100*sem_sensitivity_3contMet,'g','LineWidth',1.5);
-errorbar(1:4,100*mean_specificity_3contMet,100*sem_specificity_3contMet,'b','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet,100*sem_ppv_3contMet,'m','LineWidth',1.5);
-errorbar(1:4,100*mean_ppv_3contMet_random,100*sem_ppv_3contMet_random,'k--','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet,100*sem_F1_3contMet,'k','LineWidth',1.5);
+errorbar(1:4,100*mean_F1_3contMet_random,100*sem_F1_3contMet_random,'k--','LineWidth',1.5);
 row1 = {'nT = 50' 'nT = 15' 'nT = 50' 'nT = 15'};
 row2 = {'CoV = 0.05' 'CoV = 0.05' 'CoV = 0.15' 'CoV = 0.15'};
 labelArray = [row1; row2]; 
