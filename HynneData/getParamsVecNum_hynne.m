@@ -1,4 +1,4 @@
-function vecOut = getParamsVecNum_chassV(n)
+function vecOut = getParamsVecNum_hynne(n)
 % Just a hard-coded list of parameter vectors, by index
 
     % Vary ICs
