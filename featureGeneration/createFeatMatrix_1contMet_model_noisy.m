@@ -38,22 +38,22 @@ for regListIndex = 1:length(train_true_regs_meta_1contMet)
 end
 featureMatrix_AutoGenerateTrain_meta_1contMet_n = normalize(featureMatrix_AutoGenerateTrain_meta_1contMet,2,'range');
 
-% Hynne feature matrix
-for regListIndex = 1:length(HynneMA_1contMet_List)
+% model feature matrix
+for regListIndex = 1:length(modelMA_1contMet_List)
 
-    tarFlux = HynneMA_1contMet_List(regListIndex,end);
-    met1 = HynneMA_1contMet_List(regListIndex,1);
+    tarFlux = modelMA_1contMet_List(regListIndex,end);
+    met1 = modelMA_1contMet_List(regListIndex,1);
     
     % Correlation of single metabolite with target flux
-    featureMatrix_1contMet_Hynne(1,regListIndex) = feature_correlation_1contMet_median(Hynne_prefix,met1,tarFlux,num_IC,nT,cov,rep);
+    featureMatrix_1contMet_model(1,regListIndex) = feature_correlation_1contMet_median(model_prefix,met1,tarFlux,num_IC,nT,cov,rep);
 
     % Curve fit adjusted R2
-    featureMatrix_1contMet_Hynne(2,regListIndex) = feature_curveFit_1contMet_median(Hynne_prefix,met1,tarFlux,num_IC,nT,cov,rep);
+    featureMatrix_1contMet_model(2,regListIndex) = feature_curveFit_1contMet_median(model_prefix,met1,tarFlux,num_IC,nT,cov,rep);
 
     % Predict flux with machine learning
-    featureMatrix_1contMet_Hynne(3,regListIndex) = feature_predictFlux_1contMet_median(Hynne_prefix,met1,tarFlux,num_IC,nT,cov,rep);
+    featureMatrix_1contMet_model(3,regListIndex) = feature_predictFlux_1contMet_median(model_prefix,met1,tarFlux,num_IC,nT,cov,rep);
 
     % CoV of metabolite vs flux data
-    featureMatrix_1contMet_Hynne(4,regListIndex) = feature_cov_1contMet_median(Hynne_prefix,met1,tarFlux,num_IC,nT,cov,rep);
+    featureMatrix_1contMet_model(4,regListIndex) = feature_cov_1contMet_median(model_prefix,met1,tarFlux,num_IC,nT,cov,rep);
 end
-featureMatrix_1contMet_Hynne_n = normalize(featureMatrix_1contMet_Hynne,2,'range');
+featureMatrix_1contMet_model_n = normalize(featureMatrix_1contMet_model,2,'range');
